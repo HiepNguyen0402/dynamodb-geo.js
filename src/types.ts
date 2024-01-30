@@ -18,6 +18,10 @@ export interface GeoPoint {
 export interface GeoQueryInput {
   QueryInput?: DynamoDB.QueryInput;
 }
+export interface QueryByAttributeInput {
+  filterExpression: string;
+  expressionAttributeValues: Record<string, DynamoDB.AttributeValue> 
+}
 export interface GeoQueryOutput extends DynamoDB.QueryOutput {
 }
 export interface GetPointInput {
@@ -28,6 +32,11 @@ export interface GetPointInput {
 export interface GetPointOutput extends DynamoDB.GetItemOutput {
 }
 export interface PutPointInput {
+  RangeKeyValue: DynamoDB.AttributeValue;
+  GeoPoint: GeoPoint;
+  PutItemInput: DynamoDB.PutRequest;
+}
+export interface PutPoint2Input {
   RangeKeyValue: DynamoDB.AttributeValue;
   GeoPoint: GeoPoint;
   PutItemInput: DynamoDB.PutRequest;
