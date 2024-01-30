@@ -76,13 +76,17 @@ export class DynamoDBManager {
         IndexName: this.config.geohashIndexName,
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
-        ExclusiveStartKey: lastEvaluatedKey,
-        FilterExpression: queryByAttributeInput.filterExpression,
-        ExpressionAttributeValues: queryByAttributeInput.expressionAttributeValues
+        ExclusiveStartKey: lastEvaluatedKey
       };
-
+      let optionalProps = {};
+      if (queryByAttributeInput && queryByAttributeInput.filterExpression && queryByAttributeInput.expressionAttributeValues) {
+        optionalProps = {
+          FilterExpression: queryByAttributeInput.filterExpression,
+          ExpressionAttributeValues: queryByAttributeInput.expressionAttributeValues
+        }
+      }
       console.log(defaults)
-      const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput }).promise();
+      const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput, ...optionalProps }).promise();
       queryOutputs.push(queryOutput);
       if (queryOutput.LastEvaluatedKey) {
         return nextQuery(queryOutput.LastEvaluatedKey);
