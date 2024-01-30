@@ -23,6 +23,7 @@ import {
   GetPointOutput,
   PutPointInput,
   PutPointOutput,
+  QueryByAttributeInput,
   UpdatePointInput,
   UpdatePointOutput
 } from "../types";
@@ -50,8 +51,8 @@ export class DynamoDBManager {
    *
    * @return The query result.
    */
-  public async queryGeohash(queryInput: DynamoDB.QueryInput | undefined, hashKey: Long, range: GeohashRange): Promise<DynamoDB.QueryOutput[]> {
-    const queryOutputs: DynamoDB.QueryOutput[] = [];
+  public async queryGeohash(queryInput: DynamoDB.QueryInput | undefined, hashKey: Long, range: GeohashRange, queryByAttributeInput?: QueryByAttributeInput): Promise<DynamoDB.QueryOutput[]> {
+    const queryOutputs: DynamoDB.QueryOutput[] = []
 
     const nextQuery = async (lastEvaluatedKey: DynamoDB.Key = null) => {
       const keyConditions: { [key: string]: DynamoDB.Condition } = {};
@@ -69,9 +70,6 @@ export class DynamoDBManager {
         AttributeValueList: [minRange, maxRange]
       };
 
-      const filterExpression = "specificAddress = :specificAddress";
-      const expressionAttributeValues = { ":specificAddress": { S: "20 Hoang Hoa Tham" } };
-
       const defaults = {
         TableName: this.config.tableName,
         KeyConditions: keyConditions,
@@ -79,8 +77,8 @@ export class DynamoDBManager {
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
         ExclusiveStartKey: lastEvaluatedKey,
-        FilterExpression: filterExpression,
-        ExpressionAttributeValues: expressionAttributeValues
+        FilterExpression: queryByAttributeInput.filterExpression,
+        ExpressionAttributeValues: queryByAttributeInput.expressionAttributeValues
       };
 
       console.log(defaults)

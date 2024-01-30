@@ -26,6 +26,7 @@ import {
   GetPointOutput,
   PutPointInput,
   PutPointOutput,
+  QueryByAttributeInput,
   QueryRadiusInput,
   QueryRectangleInput,
   UpdatePointInput,
@@ -226,12 +227,12 @@ export class GeoDataManager {
    *
    * @return Result of radius query request.
    * */
-  public async queryRadius(queryRadiusInput: QueryRadiusInput): Promise<DynamoDB.ItemList> {
+  public async queryRadius(queryRadiusInput: QueryRadiusInput, queryByAttributeInput?: QueryByAttributeInput): Promise<DynamoDB.ItemList> {
     const latLngRect: S2LatLngRect = S2Util.getBoundingLatLngRectFromQueryRadiusInput(queryRadiusInput);
 
     const covering = new Covering(new this.config.S2RegionCoverer().getCoveringCells(latLngRect));
 
-    const results = await this.dispatchQueries(covering, queryRadiusInput);
+    const results = await this.dispatchQueries(covering, queryRadiusInput, queryByAttributeInput);
     return this.filterByRadius(results, queryRadiusInput);
   }
 
@@ -304,10 +305,10 @@ export class GeoDataManager {
    *
    * @return Aggregated and filtered items returned from Amazon DynamoDB.
    */
-  private async dispatchQueries(covering: Covering, geoQueryInput: GeoQueryInput) {
+  private async dispatchQueries(covering: Covering, geoQueryInput: GeoQueryInput, queryByAttributeInput?: QueryByAttributeInput) {
     const promises: Promise<DynamoDB.QueryOutput[]>[] = covering.getGeoHashRanges(this.config.hashKeyLength).map(range => {
       const hashKey = S2Manager.generateHashKey(range.rangeMin, this.config.hashKeyLength);
-      return this.dynamoDBManager.queryGeohash(geoQueryInput.QueryInput, hashKey, range);
+      return this.dynamoDBManager.queryGeohash(geoQueryInput.QueryInput, hashKey, range, queryByAttributeInput);
     });
 
     const results: DynamoDB.QueryOutput[][] = await Promise.all(promises);
