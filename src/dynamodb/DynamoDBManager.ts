@@ -69,13 +69,18 @@ export class DynamoDBManager {
         AttributeValueList: [minRange, maxRange]
       };
 
+      const filterExpression = "specificAddress = :specificAddress";
+      const expressionAttributeValues = { ":specificAddress": { S: "20 Hoang Hoa Tham" } };
+
       const defaults = {
         TableName: this.config.tableName,
         KeyConditions: keyConditions,
         IndexName: this.config.geohashIndexName,
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
-        ExclusiveStartKey: lastEvaluatedKey
+        ExclusiveStartKey: lastEvaluatedKey,
+        FilterExpression: filterExpression,
+        ExpressionAttributeValues: expressionAttributeValues
       };
 
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput }).promise();
