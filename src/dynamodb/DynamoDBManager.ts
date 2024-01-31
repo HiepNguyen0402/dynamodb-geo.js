@@ -65,10 +65,10 @@ export class DynamoDBManager {
       const minRange: DynamoDB.AttributeValue = { N: range.rangeMin.toString(10) };
       const maxRange: DynamoDB.AttributeValue = { N: range.rangeMax.toString(10) };
 
-      keyConditions[this.config.geohashAttributeName] = {
-        ComparisonOperator: "BETWEEN",
-        AttributeValueList: [minRange, maxRange]
-      };
+      // keyConditions[this.config.geohashAttributeName] = {
+      //   ComparisonOperator: "BETWEEN",
+      //   AttributeValueList: [minRange, maxRange]
+      // };
 
       const defaults = {
         TableName: this.config.tableName,
