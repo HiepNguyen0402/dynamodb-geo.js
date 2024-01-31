@@ -77,16 +77,20 @@ export class DynamoDBManager {
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
         ExclusiveStartKey: lastEvaluatedKey,
-        FilterExpression:queryByAttributeInput?
-        "geohash BETWEEN :startGeohash AND :endGeohash AND" + queryByAttributeInput.filterExpression: 
-        "geohash BETWEEN :startGeohash AND :endGeohash",
-        ExpressionAttributeValues: {
+        FilterExpression: queryByAttributeInput?
+        "geohash BETWEEN :minRange AND :maxRange AND" + queryByAttributeInput.filterExpression: 
+        "geohash BETWEEN :minRange AND :maxRange",
+        ExpressionAttributeValues:queryByAttributeInput?{
           ...{
-            ':startGeohash': minRange,
-            ':endGeohash': maxRange,
-          },
-          ...queryByAttributeInput.expressionAttributeValues??{}
+            ':minRange': minRange,
+            ':maxRange': maxRange,
+            },
+          ...queryByAttributeInput.expressionAttributeValues
         }
+        :{
+          ':minRange': minRange,
+          ':maxRange': maxRange,
+          }
       };
       // if (queryByAttributeInput && queryByAttributeInput.filterExpression && queryByAttributeInput.expressionAttributeValues) {
       //   defaults.FilterExpression = queryByAttributeInput.filterExpression;
