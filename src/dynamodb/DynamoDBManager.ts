@@ -69,6 +69,7 @@ export class DynamoDBManager {
         ComparisonOperator: "BETWEEN",
         AttributeValueList: [minRange, maxRange]
       };
+      console.log(keyConditions)
 
       const defaults = {
         TableName: this.config.tableName,
@@ -87,7 +88,6 @@ export class DynamoDBManager {
       }
       console.log(defaults)
       console.log("test1")
-      console.log(queryInput)
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput}).promise();
       console.log(queryOutput)
       queryOutputs.push(queryOutput);
