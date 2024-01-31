@@ -85,8 +85,9 @@ export class DynamoDBManager {
           ExpressionAttributeValues: queryByAttributeInput.expressionAttributeValues
         }
       }
-      console.log(defaults)
+      console.log({ ...defaults, ...queryInput})
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput}).promise();
+      console.log(queryOutput)
       queryOutputs.push(queryOutput);
       if (queryOutput.LastEvaluatedKey) {
         return nextQuery(queryOutput.LastEvaluatedKey);
