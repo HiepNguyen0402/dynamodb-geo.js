@@ -56,7 +56,7 @@ export class DynamoDBManager {
 
     const nextQuery = async (lastEvaluatedKey: DynamoDB.Key = null) => {
       const keyConditions: { [key: string]: DynamoDB.Condition } = {};
-
+      console.log([{ N: hashKey.toString(10) }])
       keyConditions[this.config.hashKeyAttributeName] = {
         ComparisonOperator: "EQ",
         AttributeValueList: [{ N: hashKey.toString(10) }]
@@ -70,7 +70,7 @@ export class DynamoDBManager {
         AttributeValueList: [minRange, maxRange]
       };
       console.log(keyConditions)
-
+      console.log([minRange, maxRange])
       const defaults = {
         TableName: this.config.tableName,
         KeyConditions: keyConditions,
