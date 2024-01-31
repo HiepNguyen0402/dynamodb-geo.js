@@ -73,7 +73,7 @@ export class DynamoDBManager {
       const defaults = {
         TableName: this.config.tableName,
         KeyConditions: keyConditions,
-        IndexName: this.config.geohashIndexName,
+        // IndexName: this.config.geohashIndexName,
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
         ExclusiveStartKey: lastEvaluatedKey
@@ -132,7 +132,7 @@ export class DynamoDBManager {
           [putPointInput.GeoPoint.latitude, putPointInput.GeoPoint.longitude])
       })
     };
-
+    console.log(putItemInput)
     return this.config.dynamoDBClient.putItem(putItemInput);
   }
 
