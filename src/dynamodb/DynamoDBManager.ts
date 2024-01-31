@@ -55,26 +55,28 @@ export class DynamoDBManager {
     const queryOutputs: DynamoDB.QueryOutput[] = []
 
     const nextQuery = async (lastEvaluatedKey: DynamoDB.Key = null) => {
-      const hashKeyCondition = {
+      const keyConditions: { [key: string]: DynamoDB.Condition } = {};
+      
+      keyConditions[this.config.hashKeyAttributeName] = {
         ComparisonOperator: "EQ",
         AttributeValueList: [{ N: hashKey.toString(10) }]
       };
-  
-      const minRange = { N: range.rangeMin.toString(10) };
-      const maxRange = { N: range.rangeMax.toString(10) };
-  
-      const geohashCondition = {
+
+      const minRange: DynamoDB.AttributeValue = { N: range.rangeMin.toString(10) };
+      const maxRange: DynamoDB.AttributeValue = { N: range.rangeMax.toString(10) };
+
+      keyConditions[this.config.geohashAttributeName] = {
         ComparisonOperator: "BETWEEN",
         AttributeValueList: [minRange, maxRange]
       };
 
       const defaults = {
         TableName: this.config.tableName,
-        KeyConditionExpression: `${this.config.hashKeyAttributeName} = :hashKey and ${this.config.geohashAttributeName} BETWEEN :startGeohash AND :endGeohash`,
-        ExpressionAttributeValues: {
-          ':hashKey': hashKeyCondition.AttributeValueList[0],
-          ':startGeohash': geohashCondition.AttributeValueList[0],
-          ':endGeohash': geohashCondition.AttributeValueList[1],
+        KeyConditions: {
+          "hashKey":{
+            ComparisonOperator: "EQ",
+            AttributeValueList: [{ N: hashKey.toString(10) }]
+          }
         },
         // IndexName: this.config.geohashIndexName,
         ConsistentRead: this.config.consistentRead,
@@ -89,7 +91,6 @@ export class DynamoDBManager {
         }
       }
       console.log(defaults)
-      console.log("test1")
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput}).promise();
       console.log(queryOutput)
       queryOutputs.push(queryOutput);
