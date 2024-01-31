@@ -76,7 +76,12 @@ export class DynamoDBManager {
         // IndexName: this.config.geohashIndexName,
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
-        ExclusiveStartKey: lastEvaluatedKey
+        ExclusiveStartKey: lastEvaluatedKey,
+        FilterExpression: "geohash BETWEEN :startGeohash AND :endGeohash",
+        ExpressionAttributeValues: {
+        ':startGeohash': minRange,
+        ':endGeohash': maxRange
+      }
       };
       let optionalProps = {};
       if (queryByAttributeInput && queryByAttributeInput.filterExpression && queryByAttributeInput.expressionAttributeValues) {
