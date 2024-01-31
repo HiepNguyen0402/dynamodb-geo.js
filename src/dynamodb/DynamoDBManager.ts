@@ -65,19 +65,14 @@ export class DynamoDBManager {
       const minRange: DynamoDB.AttributeValue = { N: range.rangeMin.toString(10) };
       const maxRange: DynamoDB.AttributeValue = { N: range.rangeMax.toString(10) };
 
-      keyConditions[this.config.geohashAttributeName] = {
-        ComparisonOperator: "BETWEEN",
-        AttributeValueList: [minRange, maxRange]
-      };
+      // keyConditions[this.config.geohashAttributeName] = {
+      //   ComparisonOperator: "BETWEEN",
+      //   AttributeValueList: [minRange, maxRange]
+      // };
 
       const defaults = {
         TableName: this.config.tableName,
-        KeyConditions: {
-          "hashKey":{
-            ComparisonOperator: "EQ",
-            AttributeValueList: [{ N: hashKey.toString(10) }]
-          }
-        },
+        KeyConditions: keyConditions,
         // IndexName: this.config.geohashIndexName,
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
@@ -92,7 +87,6 @@ export class DynamoDBManager {
       }
       console.log(defaults)
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput}).promise();
-      console.log(queryOutput)
       queryOutputs.push(queryOutput);
       if (queryOutput.LastEvaluatedKey) {
         return nextQuery(queryOutput.LastEvaluatedKey);
