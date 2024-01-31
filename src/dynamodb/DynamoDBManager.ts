@@ -77,19 +77,24 @@ export class DynamoDBManager {
         ConsistentRead: this.config.consistentRead,
         ReturnConsumedCapacity: "TOTAL",
         ExclusiveStartKey: lastEvaluatedKey,
-        FilterExpression: "geohash BETWEEN :startGeohash AND :endGeohash",
+        FilterExpression:queryByAttributeInput?
+        "geohash BETWEEN :startGeohash AND :endGeohash AND" + queryByAttributeInput.filterExpression: 
+        "geohash BETWEEN :startGeohash AND :endGeohash",
         ExpressionAttributeValues: {
-        ':startGeohash': minRange,
-        ':endGeohash': maxRange
-      }
+          ...{
+            ':startGeohash': minRange,
+            ':endGeohash': maxRange,
+          },
+          ...queryByAttributeInput.expressionAttributeValues??{}
+        }
       };
-      if (queryByAttributeInput && queryByAttributeInput.filterExpression && queryByAttributeInput.expressionAttributeValues) {
-        defaults.FilterExpression = queryByAttributeInput.filterExpression;
-        defaults.ExpressionAttributeValues = {
-          ...defaults.ExpressionAttributeValues,
-          ...queryByAttributeInput.expressionAttributeValues
-        };
-      }
+      // if (queryByAttributeInput && queryByAttributeInput.filterExpression && queryByAttributeInput.expressionAttributeValues) {
+      //   defaults.FilterExpression = queryByAttributeInput.filterExpression;
+      //   defaults.ExpressionAttributeValues = {
+      //     ...defaults.ExpressionAttributeValues,
+      //     ...queryByAttributeInput.expressionAttributeValues
+      //   };
+      // }
       console.log({ ...defaults, ...queryInput})
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput}).promise();
       queryOutputs.push(queryOutput);
