@@ -78,7 +78,7 @@ export class DynamoDBManager {
         ReturnConsumedCapacity: "TOTAL",
         ExclusiveStartKey: lastEvaluatedKey,
         FilterExpression: queryByAttributeInput?
-        "geohash BETWEEN :minRange AND :maxRange AND" + queryByAttributeInput.filterExpression: 
+        "geohash BETWEEN :minRange AND :maxRange AND " + queryByAttributeInput.filterExpression: 
         "geohash BETWEEN :minRange AND :maxRange",
         ExpressionAttributeValues:queryByAttributeInput?{
           ...{
