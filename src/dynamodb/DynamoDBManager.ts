@@ -83,14 +83,14 @@ export class DynamoDBManager {
         ':endGeohash': maxRange
       }
       };
-      let optionalProps = {};
       if (queryByAttributeInput && queryByAttributeInput.filterExpression && queryByAttributeInput.expressionAttributeValues) {
-        optionalProps = {
-          FilterExpression: queryByAttributeInput.filterExpression,
-          ExpressionAttributeValues: queryByAttributeInput.expressionAttributeValues
-        }
+        defaults.FilterExpression = queryByAttributeInput.filterExpression;
+        defaults.ExpressionAttributeValues = {
+          ...defaults.ExpressionAttributeValues,
+          ...queryByAttributeInput.expressionAttributeValues
+        };
       }
-      console.log({ ...defaults, ...queryInput, ...optionalProps})
+      console.log({ ...defaults, ...queryInput})
       const queryOutput = await this.config.dynamoDBClient.query({ ...defaults, ...queryInput, ...optionalProps}).promise();
       queryOutputs.push(queryOutput);
       if (queryOutput.LastEvaluatedKey) {
