@@ -172,26 +172,13 @@ export class GeoDataManager {
   }
 
   /**
-   * <p>
-   * Get a point from the Amazon DynamoDB table.
-   * </p>
-   * <b>Sample usage:</b>
-   *
-   * <pre>
-   * GeoPoint geoPoint = new GeoPoint(47.5, -122.3);
-   * AttributeValue rangeKeyValue = new AttributeValue().withS(&quot;a6feb446-c7f2-4b48-9b3a-0f87744a5047&quot;);
-   *
-   * GetPointRequest getPointRequest = new GetPointRequest(geoPoint, rangeKeyValue);
-   * GetPointResult getPointResult = geoIndexManager.getPoint(getPointRequest);
-   *
-   * System.out.println(&quot;item: &quot; + getPointResult.getGetItemResult().getItem());
-   * </pre>
-   *
-   * @param getPointInput
-   *            Container for the necessary parameters to execute get point request.
-   *
-   * @return Result of get point request.
-   * */
+ * <p>
+ * Generate a geohash string from the given GeoPoint.
+ * </p>
+ *
+ * @param geoPoint The GeoPoint from which to generate the geohash.
+ * @returns A geohash string representing the GeoPoint.
+ */
   public generateGeohash(geoPoint: GeoPoint) {
     return S2Manager.generateGeohash(geoPoint).toString(10);
   }
