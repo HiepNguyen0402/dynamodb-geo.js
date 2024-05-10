@@ -19,11 +19,9 @@ import * as Long from "long";
 
 export class S2Manager {
   static generateGeohash(geoPoint: GeoPoint) {
-    console.log(geoPoint)
     const latLng = S2LatLng.fromDegrees(geoPoint.latitude, geoPoint.longitude);
     const cell = S2Cell.fromLatLng(latLng);
     const cellId = cell.id;
-    console.log(cellId)
     return cellId.id;
   }
 
