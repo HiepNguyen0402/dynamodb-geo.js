@@ -20,7 +20,6 @@ import {
   BatchWritePointOutput,
   DeletePointInput,
   DeletePointOutput,
-  GeoHash,
   GeoPoint,
   GeoQueryInput,
   GetPointInput,
@@ -195,6 +194,7 @@ export class GeoDataManager {
    * */
   public generateGeohash(geoPoint: GeoPoint): Request<any, AWSError> {
     return S2Manager.generateGeohash(geoPoint) as unknown as Request<any, AWSError>;
+  }
 
   /**
    * <p>
