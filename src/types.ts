@@ -15,6 +15,9 @@ export interface GeoPoint {
   latitude: number;
   longitude: number;
 }
+export interface GeoHash {
+  geoHash: number;
+}
 export interface GeoQueryInput {
   QueryInput?: DynamoDB.QueryInput;
 }
