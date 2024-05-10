@@ -146,7 +146,7 @@ export class DynamoDBManager {
           [putPointInput.GeoPoint.latitude, putPointInput.GeoPoint.longitude])
       })
     };
-    console.log(putItemInput)
+    
     return this.config.dynamoDBClient.putItem(putItemInput);
   }
 
