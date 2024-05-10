@@ -192,8 +192,8 @@ export class GeoDataManager {
    *
    * @return Result of get point request.
    * */
-  public generateGeohash(geoPoint: GeoPoint): Request<any, AWSError> {
-    return S2Manager.generateGeohash(geoPoint) as unknown as Request<any, AWSError>;
+  public generateGeohash(geoPoint: GeoPoint) {
+    return S2Manager.generateGeohash(geoPoint);
   }
 
   /**
