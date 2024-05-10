@@ -193,6 +193,7 @@ export class GeoDataManager {
    * @return Result of get point request.
    * */
   public generateGeohash(geoPoint: GeoPoint): Long {
+    console.log(geoPoint)
     return S2Manager.generateGeohash(geoPoint);
   }
 
